@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { API } from "aws-amplify";
 import { LinkContainer } from "react-router-bootstrap";
 import { PageHeader, ListGroup, ListGroupItem } from "react-bootstrap";
+import { S3Image } from 'aws-amplify-react';
 import "./Home.css";
 
 export default function Home(props) {
-  const [notes, setNotes] = useState([]);
+  const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -15,8 +16,8 @@ export default function Home(props) {
       }
 
       try {
-        const notes = await loadNotes();
-        setNotes(notes);
+        const img = await loadImages();
+        setImages(img.reverse());
       } catch (e) {
         alert(e);
       }
@@ -27,23 +28,24 @@ export default function Home(props) {
     onLoad();
   }, [props.isAuthenticated]);
 
-  function loadNotes() {
-    return API.get("notes", "/notes");
+  function loadImages() {
+    return API.get("uploads", "/uploads");
   }
 
-  function renderNotesList(notes) {
-    return [{}].concat(notes).map((note, i) =>
+  function renderNotesList(images) {
+    console.log(images);
+    return [{}].concat(images).map((img, i) =>
       i !== 0 ? (
-        <LinkContainer key={note.noteId} to={`/notes/${note.noteId}`}>
-          <ListGroupItem header={note.content.trim().split("\n")[0]}>
-            {"Created: " + new Date(note.createdAt).toLocaleString()}
-          </ListGroupItem>
+        <LinkContainer key={img.uploadId} to={`/uploads/${img.uploadId}`}>
+          <div className="preview">
+            <S3Image imgKey={img.image} level="private"/>
+          </div>
         </LinkContainer>
       ) : (
-        <LinkContainer key="new" to="/notes/new">
+        <LinkContainer key="new" to="/uploads/new">
           <ListGroupItem>
             <h4>
-              <b>{"\uFF0B"}</b> Create a new note
+              <b>{"\uFF0B"}</b> Upload another image
             </h4>
           </ListGroupItem>
         </LinkContainer>
@@ -54,18 +56,18 @@ export default function Home(props) {
   function renderLander() {
     return (
       <div className="lander">
-        <h1>Scratch</h1>
-        <p>A simple note taking app</p>
+        <h1>Boblet</h1>
+        <p>A collection of photos for your little ones</p>
       </div>
     );
   }
 
   function renderNotes() {
     return (
-      <div className="notes">
-        <PageHeader>Your Notes</PageHeader>
+      <div className="images">
+        <PageHeader>Photos</PageHeader>
         <ListGroup>
-          {!isLoading && renderNotesList(notes)}
+          {!isLoading && renderNotesList(images)}
         </ListGroup>
       </div>
     );

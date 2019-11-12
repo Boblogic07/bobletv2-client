@@ -6,9 +6,9 @@ import UnauthenticatedRoute from "./components/UnauthenticatedRoute";
 
 import Home from "./containers/Home";
 import Login from "./containers/Login";
-import Notes from "./containers/Notes";
+import ViewUpload from "./containers/ViewUpload";
 import Signup from "./containers/Signup";
-import NewNote from "./containers/NewNote";
+import Upload from "./containers/upload";
 import Settings from "./containers/Settings";
 import NotFound from "./containers/NotFound";
 
@@ -19,8 +19,8 @@ export default function Routes({ appProps }) {
       <UnauthenticatedRoute path="/login" exact component={Login} appProps={appProps} />
       <UnauthenticatedRoute path="/signup" exact component={Signup} appProps={appProps} />
       <AuthenticatedRoute path="/settings" exact component={Settings} appProps={appProps} />
-      <AuthenticatedRoute path="/notes/new" exact component={NewNote} appProps={appProps} />
-      <AuthenticatedRoute path="/notes/:id" exact component={Notes} appProps={appProps} />
+      <AuthenticatedRoute path="/upload/new" exact component={Upload} appProps={appProps} />
+      <AuthenticatedRoute path="/upload/:id" exact component={ViewUpload} appProps={appProps} />
       {/* Finally, catch all unmatched routes */}
       <Route component={NotFound} />
     </Switch>
